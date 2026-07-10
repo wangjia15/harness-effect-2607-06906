@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Harness Effect · arXiv:2607.06906</title>
+
+<!-- Reveal.js core CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css" id="theme">
+<!-- Highlight.js for code -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+
+<style>
+  /* Noto Sans SC for clean Chinese rendering */
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --accent: #4fc3f7;
+    --accent-warm: #ffb74d;
+    --accent-rose: #f06292;
+    --accent-green: #81c784;
+    --muted: #b0bec5;
+  }
+
+  .reveal {
+    font-family: 'Noto Sans SC', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 26px;
+  }
+
+  .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+    font-family: 'Noto Sans SC', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    text-transform: none;
+    letter-spacing: 0.01em;
+  }
+
+  .reveal h1 { font-size: 2.2em; font-weight: 700; }
+  .reveal h2 { font-size: 1.6em; font-weight: 600; color: var(--accent); }
+  .reveal h3 { font-size: 1.15em; font-weight: 500; color: var(--accent-warm); }
+
+  .reveal p, .reveal li { line-height: 1.55; }
+
+  .reveal .accent   { color: var(--accent); }
+  .reveal .warm     { color: var(--accent-warm); }
+  .reveal .rose     { color: var(--accent-rose); }
+  .reveal .green    { color: var(--accent-green); }
+  .reveal .muted    { color: var(--muted); }
+  .reveal .small    { font-size: 0.7em; }
+  .reveal .tiny     { font-size: 0.55em; }
+  .reveal .mono     { font-family: 'JetBrains Mono', monospace; }
+
+  .reveal .title-block {
+    text-align: left;
+    padding: 0 40px;
+  }
+  .reveal .byline {
+    margin-top: 1.4em;
+    font-size: 0.65em;
+    color: var(--muted);
+  }
+  .reveal .byline .badge {
+    display: inline-block;
+    padding: 0.15em 0.6em;
+    border: 1px solid var(--accent);
+    border-radius: 3px;
+    color: var(--accent);
+    margin-right: 0.4em;
+  }
+
+  .reveal .lede {
+    font-size: 1.05em;
+    color: #eceff1;
+  }
+  .reveal .stat-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 0.6em 0;
+    gap: 0.6em;
+  }
+  .reveal .stat {
+    text-align: center;
+    flex: 1;
+  }
+  .reveal .stat .num {
+    font-size: 2.4em;
+    font-weight: 700;
+    line-height: 1.1;
+    display: block;
+  }
+  .reveal .stat .lbl {
+    font-size: 0.55em;
+    color: var(--muted);
+  }
+
+  .reveal .eq-block {
+    background: rgba(79, 195, 247, 0.06);
+    border-left: 3px solid var(--accent);
+    padding: 0.6em 1em;
+    margin: 0.6em auto;
+    max-width: 88%;
+    text-align: left;
+  }
+  .reveal .eq-caption {
+    font-size: 0.55em;
+    color: var(--muted);
+    margin-top: 0.3em;
+  }
+
+  .reveal .figure-frame {
+    background: #fff;
+    border-radius: 4px;
+    padding: 6px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+  .reveal .figure-frame img {
+    max-width: 65%;
+    max-height: 60vh;
+    object-fit: contain;
+  }
+  .reveal .figure-caption {
+    font-size: 0.5em;
+    color: var(--muted);
+    margin-top: 0.4em;
+    font-style: italic;
+  }
+
+  .reveal .term-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5em;
+    margin: 0.6em 0;
+  }
+  .reveal .term {
+    text-align: center;
+    border: 1px solid var(--muted);
+    border-radius: 4px;
+    padding: 0.4em 0.2em;
+    background: rgba(255,255,255,0.03);
+  }
+  .reveal .term .symbol {
+    font-size: 1.4em;
+    color: var(--accent);
+    font-weight: 600;
+    display: block;
+  }
+  .reveal .term .name {
+    font-size: 0.5em;
+    color: var(--muted);
+  }
+
+  .reveal .compare-table {
+    font-size: 0.75em;
+    margin: 0.5em auto;
+    border-collapse: collapse;
+  }
+  .reveal .compare-table th, .reveal .compare-table td {
+    border: 1px solid #455a64;
+    padding: 0.35em 0.8em;
+    text-align: left;
+  }
+  .reveal .compare-table th {
+    background: rgba(79, 195, 247, 0.15);
+    color: var(--accent);
+  }
+
+  .reveal .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2em;
+    text-align: left;
+    font-size: 0.85em;
+  }
+  .reveal .two-col .col {
+    background: rgba(255,255,255,0.03);
+    border-radius: 4px;
+    padding: 0.5em 0.8em;
+  }
+  .reveal .two-col h4 {
+    color: var(--accent);
+    margin: 0 0 0.3em 0;
+    font-size: 1em;
+  }
+  .reveal .two-col ul { margin: 0; padding-left: 1.1em; }
+
+  .reveal .verdict-box {
+    border: 2px solid var(--accent-warm);
+    border-radius: 6px;
+    padding: 0.5em 1em;
+    background: rgba(255, 183, 77, 0.06);
+    margin: 0.5em 0;
+  }
+  .reveal .verdict-box .verdict-label {
+    color: var(--accent-warm);
+    font-weight: 700;
+    font-size: 0.85em;
+  }
+  .reveal .redteam-list { font-size: 0.7em; }
+  .reveal .redteam-list li { margin-bottom: 0.3em; }
+
+  .reveal .kpi-arrow {
+    font-size: 2em;
+    color: var(--accent-warm);
+    margin: 0 0.3em;
+  }
+
+  .reveal .footer {
+    position: absolute;
+    bottom: 14px;
+    left: 24px;
+    right: 24px;
+    font-size: 0.4em;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .reveal .progress { color: var(--accent); }
+
+  /* Mermaid adjustments inside slides */
+  .reveal .mermaid {
+    background: #fafafa;
+    border-radius: 4px;
+    padding: 8px;
+    max-width: 85%;
+    margin: 0 auto;
+  }
+
+  /* Compact lists */
+  .reveal ul li, .reveal ol li { margin-bottom: 0.25em; }
+
+  .reveal section { text-align: left; }
+  .reveal section.center, .reveal section.center * { text-align: center; }
+</style>
+</head>
+
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- =========================================================
+     SLIDE 1 — Title
+     ========================================================= -->
+<section class="center">
+  <div class="title-block">
+    <h1 style="font-size:1.9em; line-height:1.2;">
+      The Harness Effect
+    </h1>
+    <h3 style="color:#cfd8dc; font-weight:400; font-size:0.85em; margin-top:0.3em;">
+      How Orchestration Design Sets the Token Economics<br>
+      of Enterprise Agentic AI
+    </h3>
+    <p class="byline">
+      <span class="badge">arXiv:2607.06906</span>
+      <span class="badge">2026-07-08</span>
+      <span class="badge">cs.AI</span>
+    </p>
+    <p class="byline" style="font-size:0.55em;">
+      Writer Inc. · 28 位作者联名 &nbsp;|&nbsp; 工业经验报告 / 企业 Agent 系统
+    </p>
+  </div>
+  <aside class="notes">开场：直接说"今天不讲模型，讲编排层"。这是来自 Writer 的 28 人工业经验报告，把"被忽视的最大杠杆"指认为 harness——不是模型。</aside>
+</section>
+
+<!-- =========================================================
+     SLIDE 2 — TL;DR
+     ========================================================= -->
+<section>
+  <h2>TL;DR · 一句话核心</h2>
+  <p class="lede">
+    在企业 agentic AI 系统里，<span class="accent">harness（编排层）比模型本身更能决定单任务的 token 账单</span>。
+    把传统生产循环换成 Writer Agent Harness，跨 6 个模型平均：
+  </p>
+  <div class="stat-row" style="margin-top:0.8em;">
+    <div class="stat"><span class="num rose">−41%</span><span class="lbl">单任务成本 ($/task)</span></div>
+    <div class="stat"><span class="num warm">−44%</span><span class="lbl">端到端延迟 (s/task)</span></div>
+    <div class="stat"><span class="num green">−38%</span><span class="lbl">单任务 tokens</span></div>
+  </div>
+  <p class="small muted" style="margin-top:0.6em;">
+    而 <span class="accent">质量 n=22 上统计持平</span>（0.78 → 0.81，p 不显著）。
+    <br>"模型升级是 N×1 的加法，harness 升级是 N×M 的乘数"——同一套编排改造，对每个未来模型都生效。
+  </p>
+  <aside class="notes">先把三个减法甩出来：成本 -41%、延迟 -44%、tokens -38%，质量没动。读者立刻能听出"这不是在牺牲质量换便宜"。</aside>
+</section>
+
+<!-- =========================================================
+     SLIDE 3 — 背景：token maxing
+     ========================================================= -->
+<section>
+  <h2>背景 · Token Maxing (Jevons 悖论)</h2>
+  <p>行业默认做法是<span class="warm">"花更多 token 换能力"</span>，四条都在加码：</p>
+  <ul style="font-size:0.85em;">
+    <li><span class="accent">长推理</span> · long CoT、单步多次采样、自我反思</li>
+    <li><span class="accent">多轮对话</span> · k 步 agent loop、用户往返纠错</li>
+    <li><span class="accent">宽 schema</span> · 工具目录全量注入、retrieval 灌进 system</li>
+    <li><span class="accent">全量历史重放</span> · 每次 turn 把整段 transcript 再喂一遍</li>
+  </ul>
+  <div class="eq-block" style="margin-top:0.5em;">
+    <p class="small" style="margin:0;">单 token 价格 <span class="green">↓</span> · 单任务 token 数 <span class="rose">↑</span> 更快</p>
+    <p class="eq-caption">Anthropic 报告多 agent 系统 ~15× chat token；本文 100:1 input:output 比——<span class="warm">Jevons 悖论</span>在企业账单里照常发生。</p>
+  </div>
+  <aside class="notes">Token maxing 是论文自造词，描述"边际 Q/τ 持续下降"的开发轨迹。先把行业共识放出来，下面才好说"没人动对的地方"。</aside>
+</section>
+
+<!-- =========================================================
+     SLIDE 4 — 问题
+     ========================================================= -->
+<section>
+  <h2>问题 · 优化都打在"调用内部"</h2>
+  <p>已有的 token 优化路径：</p>
+  <div class="two-col" style="font-size:0.8em;">
+    <div class="col">
+      <h4>✓ 调用内部（in-call）</h4>
+      <ul>
+        <li>Prompt 压缩 / 摘要历史</li>
+        <li>Budget reasoning / CoT 限长</li>
+        <li>路由到更便宜的模型</li>
+        <li>Speculative decoding、kv cache</li>
+        <li>结构化输出约束 token 数</li>
+      </ul>
+    </div>
+    <div class="col" style="border-color:var(--rose);">
+      <h4 class="rose">✗ 没人动：编排层 (orchestration)</h4>
+      <ul>
+        <li>Prompt 的<span class="warm">两区结构</span></li>
+        <li>历史压缩与 offload</li>
+        <li>工具 schema 的 scope</li>
+        <li>子代理与重试策略</li>
+        <li>Cache-aware 写入</li>
+      </ul>
+    </div>
+  </div>
+  <p class="small muted" style="margin-top:0.6em;">
+    论文的提问：<span class="accent">如果把 token 经济学提到 orchestration 层，杠杆是否被低估了一个数量级？</span>
+  </p>
+  <aside class="notes">用一个二分表格让"in-call 优化"和"orchestration 优化"对比一下。读者立刻看出论文的"空缺定位"。</aside>
+</section>
+
+<!-- =========================================================
+     SLIDE 5 — Eq. 2: 五项分解
+     ========================================================= -->
+<section>
+  <h2>核心公式 · Eq. 2 · 五项分解</h2>
+  <p>把单次 turn 的输入 token <span class="accent">\(T_{in}\)</span> 完全展开：</p>
+  <div class="eq-block">
+    $$T_{in} \;=\; S \;+\; H \;+\; G \;+\; R \;+\; U$$
+  </div>
+  <div class="term-grid" style="margin-top:0.5em;">
+    <div class="term"><span class="symbol">S</span><span class="name">System</span></div>
+    <div class="term"><span class="symbol">H</span><span class="name">History</span></div>
+    <div class="term"><span class="symbol">G</span><span class="name">Tool schemas</span></div>
+    <div class="term"><span class="symbol">R</span><span class="name">Retrieval</span></div>
+    <div class="term"><span class="symbol">U</span><span class="name">User turn</span></div>
+  </div>
+  <p class="small muted">单任务账单（k 轮 loop）：<br>
+    \(\;C \;=\; \sum_{i=1}^{k}\big(p_{in} \cdot T_{in}^{(i)} \;+\; p_{out} \cdot T_{out}^{(i)}\big)\)
+  </p>
+  <p class="eq-caption">S/H/G/R/U 五项<span class="warm">全部可被 harness 改写</span>，U 是唯一"真用户信号"。这是把"in-call 优化"重定位为"harness 优化"的关键一步。</p>
+  <aside class="notes">这是论文最重的一页。Eq. 2 的形式化把"token 经济"从直觉升级为公式。强调 S/H/G/R/U 都是 harness 可控的，U 才是用户信号。</aside>
+</section>
+
+<!-- =========================================================
+     SLIDE 6 — Eq. 4 + Mermaid 流程
+     ========================================================= -->
+<section>
+  <h2>核心公式 · Eq. 4 · 有效输入价</h2>
+  <p>把 cache 折扣折进价格：</p>
+  <div class="eq-block">
+    $$p_{in}^{eff} \;=\; p_{in} \cdot \big(1 \;-\; h \cdot (1 - \kappa)\big)$$
+  </div>
+  <p class="small" style="margin-top:0.5em;">
+    其中 <span class="accent">\(h\)</span> = cache 命中率，<span class="warm">\(\kappa \approx 0.1\)</span> = cached token 折扣比。
+  </p>
+  <p class="small muted">当 <span class="green">\(h \to 1\)</span>，<span class="green">\(p_{in}^{eff} \to \kappa \cdot p_{in} \approx 0.1 \cdot p_{in}\)</span>——<span class="warm">harness 控制 h</span>。</p>
+
+  <div class="mermaid">
+flowchart LR
+  S["S: System"] --> T
+  H["H: History"] --> T
+  G["G: Tool schemas"] --> T
+  R["R: Retrieval"] --> T
+  U["U: User turn"] --> T
+  T["Tin = S+H+G+R+U"] --> C["Cost = Σ(peff_in·Tin + pout·Tout)"]
+  P["peff_in = pin·(1−h(1−κ))"] --> C
+  classDef box fill:#e3f2fd,stroke:#4fc3f7,color:#0d47a1;
+  class S,H,G,R,U,T,P,C box;
+  </div>
+
+  <aside class="notes">Eq. 4 是 Eq. 2 的执行版：harness 通过控制 h 把"花出去的钱"折到 1/10。下面的 mermaid 给出 5 项 → Tin → Cost 的流向。</aside>
+</section>
+
+<!-- =========================================================
+     SLIDE 7 — Figure 1
+     ========================================================= -->
+<section>
+  <h2>Figure 1 · O(k²) vs O(k)</h2>
+  <div class="figure-frame" style="text-align:center;">
+    <img src="assets/harness-p02.png" alt="Figure 1: naive O(k^2) vs harness O(k) cumulative input tokens">
+  </div>
+  <p class="figure-caption">
+    横轴 agent turns k（2→12），纵轴 cumulative input tokens。阴影区 = <span class="warm">"花出去没买来质量"的 token</span>。
+  </p>
+  <p class="small muted">
+    Naive 全量重放走 O(k²)，harness-managed context（prefix cache + 历史压缩 + 工具输出 offload）走 O(k)。
+    <br>k=12 时差距 ~50k token/任务——这是"token maxing 来源"的视觉证据。
+  </p>
+  <aside class="notes">注意这是 schematic，不是实测曲线。实测数字在 Table 3：14.2k → 8.8k。这张图的价值是把 O(k²) vs O(k) 直观化。</aside>
+</section>
+
+<!-- =========================================================
+     SLIDE 8 — 方法学：controlled harness swap
+     ========================================================= -->
+<section>
+  <h2>方法学 · Controlled Harness Swap</h2>
+  <p>实验设计的"控制变量"全部锁死，只留一个自由度：</p>
+  <table class="compare-table" style="margin:0.6em auto;">
+    <tr><th>变量</th><th>两臂是否相同</th><th>备注</th></tr>
+    <tr><td>任务集</td><td><span class="green">✓ 锁死 22 个</span></td><td>production-realistic</td></tr>
+    <tr><td>模型</td><td><span class="green">✓ 同 6 个</span></td><td>Palmyra/Sonnet/Gemini/GLM/Flash/Qwen</td></tr>
+    <tr><td>价格表</td><td><span class="green">✓ 同</span></td><td>每模型固定 pin/pout</td></tr>
+    <tr><td>判官</td><td><span class="green">✓ 同 LLM-judge</span></td><td>统一 rubric</td></tr>
+    <tr><td>Baseline</td><td><span class="warm">frozen 2026-06-07</span></td><td>"传统生产循环"</td></tr>
+    <tr><td>唯一变量</td><td><span class="rose">编排代码</span></td><td>baseline loop vs Writer Harness</td></tr>
+  </table>
+  <p class="small muted">
+    22 任务 × 6 模型 × 2 编排层 = <span class="accent">264 cell</span>。trace-level 记账把编排效应从模型效应里干净隔离。
+  </p>
+  <aside class="notes">这是论文的硬功夫。把"控制变量"列表念出来，读者立刻知道为什么 n=6 模型也能给出有意义的"6/6 方向一致"结论。</aside>
+</section>
+
+<!-- =========================================================
+     SLIDE 9 — Figure 3 + Table 3
+     ========================================================= -->
+<section>
+  <h2>Figure 3 + Table 3 · Blended 结果</h2>
+  <div class="figure-frame" style="text-align:center;">
+    <img src="assets/harness-p10.png" alt="Figure 3: blended cost / wall-clock / tokens across 6 models">
+  </div>
+  <div class="stat-row" style="margin-top:0.5em;">
+    <div class="stat"><span class="num rose">−41%</span><span class="lbl">cost / task<br>($0.21→$0.12)</span></div>
+    <div class="stat"><span class="num warm">−44%</span><span class="lbl">wall-clock<br>(48s→27s)</span></div>
+    <div class="stat"><span class="num green">−38%</span><span class="lbl">tokens / task<br>(14.2k→8.8k)</span></div>
+  </div>
+  <p class="small muted">
+    关键不是绝对值，是 <span class="warm">"6 个模型 × 22 任务全部方向一致"</span>——uniformity 是统计决断性的来源。
+    <br>单模型波动 −33% 到 −61%，跨模型可移植。
+  </p>
+  <aside class="notes">念三组数字时强调"方向一致"——22×6=132 cell 同号，这是为什么 n=6 也能下"决断性"结论。但要记住这仍是 Writer 自己的对照实验。</aside>
+</section>
+
+<!-- =========================================================
+     SLIDE 10 — Figure 5
+     ========================================================= -->
+<section>
+  <h2>Figure 5 · 48 cell 质量异质性</h2>
+  <div class="figure-frame" style="text-align:center;">
+    <img src="assets/harness-p15.png" alt="Figure 5: 48 capability x model cells">
+  </div>
+  <p>
+    对角线上方 = harness 提升，线上 = 平，线下 = 退步。
+  </p>
+  <div class="stat-row" style="margin-top:0.3em;">
+    <div class="stat"><span class="num green">30</span><span class="lbl">提升</span></div>
+    <div class="stat"><span class="num muted">11</span><span class="lbl">持平</span></div>
+    <div class="stat"><span class="num rose">7</span><span class="lbl">退步</span></div>
+  </div>
+  <p class="small muted">
+    7 个退步 <span class="rose">全在 Flash 3.5 / Qwen 3.6 / GLM 5.1 三个小模型</span>，且 6/7 集中在 MCP / Playbooks / Presentations 三个编排密集型能力——<span class="warm">富 harness 对弱模型是负载</span>。
+  </p>
+  <aside class="notes">这张图建立"质量异质性"——不是无条件更好。退步 7 个全在小模型，是 capability floor 的伏笔。</aside>
+</section>
+
+<!-- =========================================================
+     SLIDE 11 — Figure 6: harness leverage
+     ========================================================= -->
+<section>
+  <h2>Figure 6 · Harness Leverage</h2>
+  <div class="figure-frame" style="text-align:center;">
+    <img src="assets/harness-p16.png" alt="Figure 6: delta q-bar vs baseline capability">
+  </div>
+  <p>
+    横轴：模型 baseline 能力 · 纵轴：换上 harness 后的 ∆q̄
+  </p>
+  <p>
+    6 个点几乎落在一条直线上 —— <span class="warm">r = 0.99</span>
+  </p>
+  <p class="small muted">
+    Palmyra X6 +0.079 / Sonnet 4.6 +0.073 居前；Qwen 3.6 是唯一净负（−0.031）。
+    <br>论文自造词 <span class="accent">"harness leverage"</span>：<span class="warm">强模型把 harness 翻译成能力，弱模型消化成负荷</span>。
+  </p>
+  <aside class="notes">r=0.99 的反论点是 n=6 太脆，Qwen 一个负点对相关性拉动不小。但概念本身可复用——任何 agent 团队都能在自己平台上重画这条线。</aside>
+</section>
+
+<!-- =========================================================
+     SLIDE 12 — Table 5: capability floor
+     ========================================================= -->
+<section>
+  <h2>Table 5 · Capability Floor</h2>
+  <p>子代理在 6 个模型上的稳定性：</p>
+  <table class="compare-table" style="margin:0.4em auto;">
+    <tr><th>模型</th><th>子代理成功率</th><th>区间</th></tr>
+    <tr><td>Palmyra X6</td><td><span class="green">0.86</span></td><td rowspan="2" style="vertical-align:middle;"><span class="green">稳定 ≥ 0.85</span></td></tr>
+    <tr><td>Sonnet 4.6</td><td><span class="green">0.85</span></td></tr>
+    <tr><td>Gemini 3.1 Pro</td><td><span class="warm">0.70</span></td><td rowspan="2" style="vertical-align:middle;"><span class="warm">可用但不稳</span></td></tr>
+    <tr><td>GLM 5.1</td><td><span class="warm">0.58</span></td></tr>
+    <tr><td>Flash 3.5</td><td><span class="rose">0.45</span></td><td rowspan="2" style="vertical-align:middle;"><span class="rose">不可靠</span></td></tr>
+    <tr><td>Qwen 3.6</td><td><span class="rose">0.42</span></td></tr>
+  </table>
+  <p class="small muted">
+    编排特性有它能稳定运行的<span class="warm">能力下限</span>。
+    <br>论文的 GA 决策：<span class="accent">Palmyra X6 + Sonnet 4.6 上线，其他模型 hold</span>。
+  </p>
+  <aside class="notes">Capability floor 是个可复用概念。也可以反过来问：是 harness 错配还是 judge 协议对小模型系统性偏低？需要做"子代理 prompt 强化"消融。</aside>
+</section>
+
+<!-- =========================================================
+     SLIDE 13 — Figure 7: fleet scale
+     ========================================================= -->
+<section>
+  <h2>Figure 7 · Fleet Scale · $1.08M/年</h2>
+  <div class="figure-frame" style="text-align:center;">
+    <img src="assets/harness-p17.png" alt="Figure 7: fleet scale monthly cost">
+  </div>
+  <div class="stat-row" style="margin-top:0.5em;">
+    <div class="stat"><span class="num rose">$210k</span><span class="lbl">baseline<br>1M 任务/月</span></div>
+    <div class="stat"><span class="num green">$120k</span><span class="lbl">harness<br>1M 任务/月</span></div>
+    <div class="stat"><span class="num warm">$1.08M</span><span class="lbl">年度节省</span></div>
+  </div>
+  <p class="small muted">
+    三条性质使这个节省罕见：
+    <br>① 跨模型可移植 ② 跨厂商可移植 ③ 跨未来模型可继承
+    <br><span class="warm">harness 杠杆是 N×M 的乘数</span>——对每个未来模型都生效。
+  </p>
+  <aside class="notes">这张图是给 CFO 看的——把 per-task 节省 × 任务量直接折成 $1.08M/年。论文反复用"乘数 vs 加法"语言强调 harness 投入的 NPV。</aside>
+</section>
+
+<!-- =========================================================
+     SLIDE 14 — Figure 2: two-zone prompt
+     ========================================================= -->
+<section>
+  <h2>Figure 2 · Two-Zone Prompt</h2>
+  <div class="figure-frame" style="text-align:center;">
+    <img src="assets/harness-p04.png" alt="Figure 2: byte-stable prefix + append-only">
+  </div>
+  <p>
+    把 prompt 切成两个区：
+    <span class="green">byte-stable prefix</span>（工具 schema 目录、稳定 system、append-only 写入区）
+    <span class="accent">+</span>
+    <span class="warm">可变尾部</span>（当轮新检索/新事件）
+  </p>
+  <p class="small muted">
+    缓存命中靠"前缀字节稳定"——不把时间戳、UUID、新检索结果塞进前缀，<span class="accent">h → 1</span>，<span class="green">\(p_{in}^{eff} \to 0.1 \cdot p_{in}\)</span>。
+    <br>这是把"cache hit rate"从工程黑话升级为<span class="warm">可设计参数</span>的关键图。
+  </p>
+  <aside class="notes">Eq. 4 的"h 接近 1"是怎么做到的？靠两区 prompt。强调"字节稳定"是 cache 命中的工程化前提——时间戳、UUID、动态内容都得放 append-only 区。</aside>
+</section>
+
+<!-- =========================================================
+     SLIDE 15 — 新 KPI 建议
+     ========================================================= -->
+<section>
+  <h2>新 KPI · CPM 应与质量并列为发布门槛</h2>
+  <p class="small muted">Completions Per Million tokens（每百万 token 完成的完整体任务数）</p>
+  <div class="stat-row" style="margin-top:0.6em;">
+    <div class="stat"><span class="num muted">54.9</span><span class="lbl">baseline CPM</span></div>
+    <div class="stat" style="font-size:2em; line-height:0.5; padding-top:0.6em;"><span class="kpi-arrow">→</span></div>
+    <div class="stat"><span class="num green">92.0</span><span class="lbl">harness CPM</span></div>
+  </div>
+  <p class="small muted">
+    提升 <span class="green">+68%</span>。每 1M token 完成的完整体任务数从 55 涨到 92——这是把 token 经济学转译为产品 KPI 的关键。
+  </p>
+  <div class="eq-block" style="margin-top:0.4em;">
+    <p class="small" style="margin:0;">
+      发布门槛建议：<br>
+      <span class="accent">质量 ≥ q*</span> &nbsp;<span class="warm">AND</span>&nbsp; <span class="green">CPM ≥ cpm*</span> &nbsp;<span class="warm">AND</span>&nbsp; <span class="accent">能力 floor ≥ floor*</span>
+    </p>
+  </div>
+  <p class="eq-caption">CPM 把"便宜"翻译成"每 token 产出多少完整体"——对产品/财务双向可读。</p>
+  <aside class="notes">CPM 是论文最有产品感的建议。任何 agent 团队都能立刻在 dashboard 上加这一栏。强调"应与质量并列为发布门槛"——不能再只盯 benchmark 数字。</aside>
+</section>
+
+<!-- =========================================================
+     SLIDE 16 — 路由改进
+     ========================================================= -->
+<section>
+  <h2>路由改进 · Feature Demand Routing</h2>
+  <p>当前路由：<span class="warm">"按难度路由"</span>——难任务用强模型，简单任务用弱模型。</p>
+  <p class="accent">本文建议：按"feature demand"路由</p>
+  <div class="two-col" style="font-size:0.78em; margin-top:0.5em;">
+    <div class="col">
+      <h4>强模型（≥ floor）</h4>
+      <ul>
+        <li>子代理（sub-agent）</li>
+        <li>多步规划</li>
+        <li>工具链编排</li>
+        <li>反射 / 自评</li>
+      </ul>
+      <p class="small muted" style="margin:0.3em 0 0 0;">→ 把杠杆换成能力</p>
+    </div>
+    <div class="col">
+      <h4>弱模型（&lt; floor）</h4>
+      <ul>
+        <li>接地 Q&amp;A（grounded QA）</li>
+        <li>检索增强生成</li>
+        <li>结构化抽取</li>
+        <li>格式转换</li>
+      </ul>
+      <p class="small muted" style="margin:0.3em 0 0 0;">→ 发挥 grounding 优势，避免编排负荷</p>
+    </div>
+  </div>
+  <p class="small muted" style="margin-top:0.5em;">
+    路由维度从"难度"切到"<span class="warm">能力需求 × 编排需求</span>"——富 harness 留给强模型，弱模型做不需要 orchestration 的事。
+  </p>
+  <aside class="notes">这是一个对工程团队立刻可用的建议。把"难/易"换成"feature demand"——弱模型做 grounded QA 反而比做子代理更稳。</aside>
+</section>
+
+<!-- =========================================================
+     SLIDE 17 — 局限 / 红队
+     ========================================================= -->
+<section>
+  <h2>局限 · 红队</h2>
+  <ul class="redteam-list">
+    <li><span class="rose">n = 6 模型太脆</span> · 一个 Qwen 3.6 净负（−0.031）点对 r=0.99 拉动不小；需要 12+ 模型 + bootstrap 置信带 + Spearman 报告。</li>
+    <li><span class="rose">Baseline 是裸 loop</span> · 2024-style 裸循环 vs 2026 全套优化——无法区分"任意良好设计的 harness"与"Writer 这套特殊设计"。建议加 LangGraph / Claude Agent SDK / OpenAI Assistants 做三方对照。</li>
+    <li><span class="rose">Table 1 未跑测</span> · 六系统对比基于"公开文档 + 设计期源码研究"，论文诚实称之为"设计期比较而非 benchmark"。</li>
+    <li><span class="rose">Writer 利益相关</span> · 28 位作者全部 @writer.com；GA 决策恰好是 Palmyra X6（自家）+ Sonnet 4.6——机制清单可普适，跨模型表是公司 N=1。</li>
+    <li><span class="rose">Capability floor 因果未明</span> · Qwen 0.42 / Flash 0.45 是 harness 错配还是 judge 协议对小模型系统性偏低？需要"子代理 prompt 强化"消融。</li>
+  </ul>
+  <p class="small muted" style="margin-top:0.4em;">
+    立场观察：<span class="green">n=22 质量差不显著，论文主动说 p 不显著</span>——这是诚实信号；统计上"决断性"来自方向一致而非 p &lt; 0.05。
+  </p>
+  <aside class="notes">红队是这份卡片的核心价值之一。读者听完"决断性数字"必须立刻听到"但这 5 个洞"。立场观察放在最后：作者是诚实的工业从业者，不是营销。</aside>
+</section>
+
+<!-- =========================================================
+     SLIDE 18 — 判断 + 行动
+     ========================================================= -->
+<section>
+  <h2>Verdict · 推荐深入</h2>
+  <div class="verdict-box">
+    <p class="verdict-label">Verdict</p>
+    <p class="small" style="margin:0.2em 0 0 0;">
+      形式化（Eq. 2 + Eq. 4）+ 方法学（controlled swap）+ KPI（CPM）三件套 <span class="green">可立即借用</span>；
+      跨模型数字结论在 n=6 与基线选择上 <span class="warm">需要外部复现验证</span>。
+    </p>
+  </div>
+  <div class="two-col" style="font-size:0.78em; margin-top:0.4em;">
+    <div class="col">
+      <h4 class="green">可立即借用</h4>
+      <ul>
+        <li>Eq. 2 五项分解 → 自己的 token 账单拆解</li>
+        <li>Eq. 4 有效输入价 → cache 工程目标</li>
+        <li>controlled swap 方法学 → A/B 平台</li>
+        <li>CPM KPI → 立刻加 dashboard 栏</li>
+        <li>Feature demand routing → 路由策略重排</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h4 class="warm">需要外部复现</h4>
+      <ul>
+        <li>−41%/$、−44%/s、−38%/tokens 数字本身</li>
+        <li>r = 0.99 的 leverage 曲线（12+ 模型 bootstrap）</li>
+        <li>三方 harness 对照（Writer vs 通用 vs 裸 loop）</li>
+        <li>Capability floor 的因果方向</li>
+        <li>Writer GA 决策的外部迁移性</li>
+      </ul>
+    </div>
+  </div>
+  <p class="small muted" style="margin-top:0.4em;">
+    推荐：<span class="accent">在自己的 agent 平台把 Eq. 2 + Eq. 4 重画一遍</span>，加一个第三方 harness 做第三 arm，用 CPM 替换"单任务成本"作为发布门槛。
+  </p>
+  <aside class="notes">结语：把"机制清单 + 公式 + KPI"与"跨模型表"分开看——前者可普适，后者是公司 N=1。推荐行动：把 Eq. 2/4 在自己平台重画一遍。</aside>
+</section>
+
+</div><!-- /.slides -->
+</div><!-- /.reveal -->
+
+<!-- Reveal.js scripts -->
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/math/math.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+
+<script>
+  // Initialize Mermaid first
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'default',
+    flowchart: { curve: 'basis' },
+    securityLevel: 'loose'
+  });
+
+  Reveal.initialize({
+    hash: true,
+    history: true,
+    controls: true,
+    progress: true,
+    slideNumber: 'c/t',
+    transition: 'slide',          // default 'slide' or 'convex', not fade
+    transitionSpeed: 'default',
+    backgroundTransition: 'fade',
+    math: {
+      mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+      config: 'TeX-AMS_HTML-full',
+      TeX: { Macros: { pin: 'p_{in}', pout: 'p_{out}', Tin: 'T_{in}', Tout: 'T_{out}', peff: 'p^{eff}_{in}' } }
+    },
+    plugins: [ RevealMath, RevealNotes, RevealHighlight ],
+    // Note: mermaid is rendered at load time, no Reveal plugin needed
+    dependencies: []
+  });
+</script>
+
+</body>
+</html>
